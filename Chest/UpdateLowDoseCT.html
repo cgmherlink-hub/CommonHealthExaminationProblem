@@ -1,1 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lung-RADS 胸部低劑量電腦斷層篩檢 ‧ 醫師追蹤流程圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;600;700&family=Roboto+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#132a33;
+    --paper:#f4f7f6;
+    --panel:#ffffff;
+    --navy:#0d3b4f;
+    --teal:#0f6e78;
+    --line:#c7d3d2;
 
+    --c0-bg:#eef0f0; --c0-line:#7a8686; --c0-ink:#3c4747;
+    --c1-bg:#f7f9f8; --c1-line:#9aa6a5; --c1-ink:#3c4747;
+    --c2-bg:#e7f4ea; --c2-line:#4f9a63; --c2-ink:#1e4a2b;
+    --c3-bg:#fdf6e0; --c3-line:#c99a2e; --c3-ink:#5c460f;
+    --c4a-bg:#fce8da; --c4a-line:#c56a2c; --c4a-ink:#5c3010;
+    --c4b-bg:#f9dede; --c4b-line:#b8433f; --c4b-ink:#5c1e1c;
+    --c4x-bg:#f3dbe6; --c4x-line:#9c3a67; --c4x-ink:#4a1930;
+    --cs-bg:#dbeef0; --cs-line:#1f7f8a; --cs-ink:#0f3f44;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(15,110,120,0.07) 1px, transparent 0);
+    background-size: 22px 22px;
+    color:var(--ink);
+    font-family:'Noto Sans TC', sans-serif;
+    padding:40px 18px 70px;
+  }
+
+  .wrap{max-width:980px;margin:0 auto;}
+
+  header{
+    text-align:center;
+    margin-bottom:34px;
+    padding-bottom:22px;
+    border-bottom:3px solid var(--navy);
+  }
+  .eyebrow{
+    font-family:'Roboto Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:3px;
+    color:var(--teal);
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:'Noto Serif TC',serif;
+    font-weight:900;
+    font-size:clamp(26px,4vw,38px);
+    color:var(--navy);
+    margin:0 0 8px;
+    line-height:1.35;
+  }
+  .subtitle{
+    font-size:14.5px;
+    color:#4d6266;
+    font-weight:500;
+  }
+
+  /* generic connector */
+  .arrow{
+    display:flex;
+    justify-content:center;
+    color:var(--teal);
+    font-size:22px;
+    margin:2px 0;
+    line-height:1;
+  }
+  .arrow span{
+    background:var(--paper);
+    padding:0 6px;
+  }
+  .arrow::before{
+    content:"";
+    position:relative;
+    top:14px;
+    width:2px;
+    height:26px;
+    background:var(--line);
+    margin:0 auto;
+    display:block;
+  }
+
+  /* start / question nodes */
+  .node{
+    background:var(--panel);
+    border:2px solid var(--navy);
+    border-radius:10px;
+    padding:16px 22px;
+    text-align:center;
+    font-weight:700;
+    font-size:15.5px;
+    color:var(--navy);
+    box-shadow:0 2px 0 rgba(13,59,79,0.12);
+  }
+  .node.start{
+    background:var(--navy);
+    color:#fff;
+    border-radius:999px;
+    font-family:'Noto Serif TC',serif;
+    font-size:16.5px;
+  }
+  .node.question{
+    font-weight:600;
+    color:var(--ink);
+    border-style:dashed;
+    border-color:var(--teal);
+  }
+  .node.question small{
+    display:block;
+    font-weight:400;
+    font-size:12.5px;
+    color:#5c7276;
+    margin-top:4px;
+  }
+
+  /* category rows */
+  .cat-row{
+    display:grid;
+    grid-template-columns:96px 1fr 1fr;
+    gap:0;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    margin:14px 0;
+    box-shadow:0 3px 10px rgba(19,42,51,0.06);
+  }
+  .cat-badge{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:14px 6px;
+    font-family:'Noto Serif TC',serif;
+    font-weight:900;
+    font-size:26px;
+    text-align:center;
+    border-right:1px solid rgba(0,0,0,0.08);
+  }
+  .cat-badge .label{
+    font-family:'Noto Sans TC',sans-serif;
+    font-weight:700;
+    font-size:12px;
+    margin-top:4px;
+    letter-spacing:1px;
+  }
+  .cat-body{
+    padding:14px 18px;
+    border-right:1px solid rgba(0,0,0,0.08);
+  }
+  .cat-body:last-child{border-right:none;}
+  .cat-body h4{
+    margin:0 0 6px;
+    font-size:12px;
+    letter-spacing:2px;
+    font-weight:700;
+    opacity:0.75;
+    font-family:'Roboto Mono',monospace;
+  }
+  .cat-body p{
+    margin:0;
+    font-size:14px;
+    line-height:1.7;
+  }
+  .cat-body ul{
+    margin:4px 0 0;
+    padding-left:18px;
+    font-size:13.5px;
+    line-height:1.7;
+  }
+
+  /* color assignments */
+  .c0 .cat-badge, .c0{background:var(--c0-bg);color:var(--c0-ink);}
+  .c0 .cat-badge{border-color:var(--c0-line);}
+  .c1 .cat-badge, .c1{background:var(--c1-bg);color:var(--c1-ink);}
+  .c2 .cat-badge, .c2{background:var(--c2-bg);color:var(--c2-ink);}
+  .c3 .cat-badge, .c3{background:var(--c3-bg);color:var(--c3-ink);}
+  .c4a .cat-badge, .c4a{background:var(--c4a-bg);color:var(--c4a-ink);}
+  .c4b .cat-badge, .c4b{background:var(--c4b-bg);color:var(--c4b-ink);}
+  .c4x .cat-badge, .c4x{background:var(--c4x-bg);color:var(--c4x-ink);}
+  .cs .cat-badge, .cs{background:var(--cs-bg);color:var(--cs-ink);}
+
+  .loop{
+    margin:-2px 0 14px;
+    padding:10px 18px;
+    background:rgba(255,255,255,0.55);
+    border:1px dashed rgba(0,0,0,0.25);
+    border-top:none;
+    border-radius:0 0 10px 10px;
+    font-size:13px;
+    line-height:1.7;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .loop .tag{
+    flex:none;
+    font-family:'Roboto Mono',monospace;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1px;
+    background:var(--navy);
+    color:#fff;
+    padding:2px 8px;
+    border-radius:999px;
+    margin-top:2px;
+  }
+
+  section.block{margin-top:8px;}
+  .section-title{
+    font-family:'Noto Serif TC',serif;
+    font-weight:700;
+    font-size:17px;
+    color:var(--navy);
+    margin:38px 0 14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .section-title::before{
+    content:"";
+    width:26px;height:3px;background:var(--teal);display:block;
+  }
+
+  .modifier-note{
+    margin-top:16px;
+    padding:16px 20px;
+    background:var(--panel);
+    border-left:5px solid var(--teal);
+    border-radius:0 10px 10px 0;
+    font-size:13.5px;
+    line-height:1.8;
+  }
+  .modifier-note b{color:var(--navy);}
+
+  .audit{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:16px;
+  }
+  .audit .box{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 18px;
+    font-size:13.5px;
+    line-height:1.7;
+  }
+  .audit .box b{
+    display:block;
+    font-family:'Roboto Mono',monospace;
+    font-size:12px;
+    letter-spacing:1.5px;
+    color:var(--teal);
+    margin-bottom:4px;
+  }
+
+  footer{
+    margin-top:46px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    color:#6b7c7f;
+    text-align:center;
+    line-height:1.8;
+  }
+
+  @media (max-width:720px){
+    .cat-row{grid-template-columns:1fr;}
+    .cat-badge{
+      flex-direction:row;
+      justify-content:flex-start;
+      gap:8px;
+      border-right:none;
+      border-bottom:1px solid rgba(0,0,0,0.08);
+      padding:10px 16px;
+    }
+    .cat-body{border-right:none;border-bottom:1px solid rgba(0,0,0,0.08);}
+    .audit{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">ACR LUNG-RADS® v2022 ‧ CLINICAL FOLLOW-UP PATHWAY</div>
+    <h1>胸部低劑量電腦斷層篩檢<br>醫師追蹤流程圖</h1>
+    <div class="subtitle">依 Lung-RADS 分類結果，決定下一步處置與回診時間</div>
+  </header>
+
+  <div class="node start">完成本次胸部低劑量電腦斷層（LDCT）篩檢判讀</div>
+  <div class="arrow">▼</div>
+  <div class="node question">依結節影像特徵，評定本次檢查之 Lung-RADS 類別
+    <small>原則：以本次檢查中「懷疑程度最高」之結節作為判定依據</small>
+  </div>
+  <div class="arrow">▼</div>
+
+  <!-- Category 0 -->
+  <div class="cat-row c0">
+    <div class="cat-badge">0<span class="label">不完整</span></div>
+    <div class="cat-body">
+      <h4>影像發現</h4>
+      <ul>
+        <li>需與先前 CT 比較但尚未取得</li>
+        <li>部分或全部肺野無法評估</li>
+        <li>疑似發炎或感染性病灶</li>
+      </ul>
+    </div>
+    <div class="cat-body">
+      <h4>處置</h4>
+      <p>取得並比對先前 CT；肺野無法評估者加做篩檢 CT；疑似發炎感染者安排 <b>1–3 個月後</b> LDCT 追蹤。</p>
+    </div>
+  </div>
+  <div class="loop"><span class="tag">追蹤後</span>依 1–3 個月追蹤 CT 之最可疑結節，重新評定新的 Lung-RADS 類別。</div>
+
+  <!-- Category 1 -->
+  <div class="cat-row c1">
+    <div class="cat-badge">1<span class="label">陰性</span></div>
+    <div class="cat-body">
+      <h4>影像發現</h4>
+      <p>無肺結節；或結節具良性特徵（完整／中心／爆米花狀／同心環狀鈣化，或含脂肪成分）。</p>
+    </div>
+    <div class="cat-body">
+      <h4>處置</h4>
+      <p>安排 <b>12 個月後</b>常規篩檢 LDCT。</p>
+    </div>
+  </div>
+
+  <!-- Category 2 -->
+  <div class="cat-row c2">
+    <div class="cat-badge">2<span class="label">良性</span></div>
+    <div class="cat-body">
+      <h4>影像發現（依大小門檻）</h4>
+      <ul>
+        <li>實質結節 &lt; 6 mm（新出現 &lt; 4 mm）</li>
+        <li>部分實質結節總徑 &lt; 6 mm</li>
+        <li>毛玻璃結節 &lt; 30 mm，或 ≥ 30 mm 但穩定／緩慢生長</li>
+        <li>胸膜旁結節 &lt; 10 mm 且形態典型</li>
+        <li>亞節支氣管氣道結節</li>
+      </ul>
+    </div>
+    <div class="cat-body">
+      <h4>處置</h4>
+      <p>安排 <b>12 個月後</b>常規篩檢 LDCT。</p>
+    </div>
+  </div>
+
+  <!-- Category 3 -->
+  <div class="cat-row c3">
+    <div class="cat-badge">3<span class="label">可能良性</span></div>
+    <div class="cat-body">
+      <h4>影像發現（依大小門檻）</h4>
+      <ul>
+        <li>實質結節 ≥ 6 至 &lt; 8 mm</li>
+        <li>部分實質結節總徑 ≥ 6 mm，實質成分 &lt; 6 mm</li>
+        <li>毛玻璃結節 ≥ 30 mm</li>
+        <li>厚壁囊腫之囊性成分持續生長</li>
+      </ul>
+    </div>
+    <div class="cat-body">
+      <h4>處置</h4>
+      <p>安排 <b>6 個月後</b>LDCT 追蹤。</p>
+    </div>
+  </div>
+  <div class="loop"><span class="tag">追蹤後</span>6 個月追蹤：<b>穩定或縮小</b> → 降級為類別 2，回歸 12 個月常規篩檢；<b>持續生長</b> → 依新測量大小重新分類（可能升至 4A／4B）。</div>
+
+  <!-- Category 4A -->
+  <div class="cat-row c4a">
+    <div class="cat-badge">4A<span class="label">可疑</span></div>
+    <div class="cat-body">
+      <h4>影像發現（依大小門檻）</h4>
+      <ul>
+        <li>實質結節 ≥ 8 至 &lt; 15 mm，或生長中 &lt; 8 mm</li>
+        <li>部分實質結節實質成分 ≥ 6 至 &lt; 8 mm</li>
+        <li>節支氣管或更近端氣道結節（初次發現）</li>
+        <li>厚壁或多房性非典型肺囊腫</li>
+      </ul>
+    </div>
+    <div class="cat-body">
+      <h4>處置</h4>
+      <p>安排 <b>3 個月後</b>LDCT；實質結節或實質成分 ≥ 8 mm 時，可考慮加做 PET/CT。</p>
+    </div>
+  </div>
+  <div class="loop"><span class="tag">追蹤後</span>3 個月追蹤：<b>穩定或縮小</b> → 依類別 3 路徑處理（6 個月後 LDCT）；<b>持續可疑或生長</b> → 轉入類別 4B 路徑，安排臨床評估。</div>
+
+  <!-- Category 4B -->
+  <div class="cat-row c4b">
+    <div class="cat-badge">4B<span class="label">高度可疑</span></div>
+    <div class="cat-body">
+      <h4>影像發現</h4>
+      <ul>
+        <li>實質結節 ≥ 15 mm，或新出現／生長 ≥ 8 mm</li>
+        <li>部分實質結節實質成分 ≥ 8 mm</li>
+        <li>節支氣管或更近端氣道結節，穩定或生長中</li>
+        <li>多次篩檢間緩慢生長之實質／部分實質結節</li>
+      </ul>
+    </div>
+    <div class="cat-body">
+      <h4>處置</h4>
+      <p>安排 <b>有／無顯影劑之診斷性胸部 CT</b>；視情況考慮 PET/CT；安排組織取樣；<b>轉診</b>進行進一步臨床評估。最終處置依臨床評估、病人意願及惡性機率綜合判斷。</p>
+    </div>
+  </div>
+
+  <!-- Category 4X -->
+  <div class="cat-row c4x">
+    <div class="cat-badge">4X<span class="label">加註懷疑</span></div>
+    <div class="cat-body">
+      <h4>影像發現</h4>
+      <p>原屬類別 3 或類別 4 之結節，合併其他增加惡性懷疑之特徵（如毛刺狀邊緣、淋巴結腫大、疑似轉移病灶、毛玻璃結節於 1 年內體積倍增等）。</p>
+    </div>
+    <div class="cat-body">
+      <h4>處置</h4>
+      <p>視為獨立分類，依相符之 4A／4B 處置原則採取<b>較積極</b>之臨床評估與影像追蹤。</p>
+    </div>
+  </div>
+
+  <!-- Category S -->
+  <div class="cat-row cs">
+    <div class="cat-badge">S<span class="label">修飾符</span></div>
+    <div class="cat-body">
+      <h4>影像發現</h4>
+      <p>合併與肺癌無關，但具臨床重要性或潛在臨床重要性之偶發發現（可加註於類別 0–4 之後）。</p>
+    </div>
+    <div class="cat-body">
+      <h4>處置</h4>
+      <p>依 ACR 偶發發現處置指引個別評估與處理；<b>不改變</b>原 Lung-RADS 類別之篩檢排程。已知且已在評估中之發現不需重複加註。</p>
+    </div>
+  </div>
+
+  <section class="block">
+    <div class="section-title">特殊情況與升降級規則</div>
+    <div class="modifier-note">
+      <b>氣道結節：</b>位於節支氣管或更近端之氣道結節，於 3 個月追蹤 CT 仍持續存在者，應<b>升級為類別 4B</b>，建議轉介支氣管鏡檢查評估。
+    </div>
+    <div class="modifier-note">
+      <b>生長定義：</b>於 12 個月內結節平均直徑增加 &gt; 1.5 mm，即視為生長，應依新測量結果重新分類；即使未達生長定義，只要結節大小跨越更高類別門檻，亦應重新分類並調整處置。
+    </div>
+    <div class="modifier-note">
+      <b>類別 4B 決策：</b>屬於多面向臨床決策，建議整合病人共病狀況、個人意願，並可運用 McWilliams 等人之惡性風險評估工具輔助判斷。
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-title">品質稽核定義</div>
+    <div class="audit">
+      <div class="box"><b>陰性篩檢</b>類別 1 ＋ 類別 2（陰性篩檢不代表受檢者絕無肺癌）</div>
+      <div class="box"><b>陽性篩檢</b>類別 3 ＋ 類別 4（3／4A／4B／4X）</div>
+    </div>
+  </section>
+
+  <footer>
+    資料來源：American College of Radiology, Lung-RADS® v2022（發布日期：2022 年 11 月）／衛生福利部「胸部低劑量電腦斷層篩檢服務」判讀指引表中譯版<br>
+    本流程圖為臨床追蹤參考輔助工具，實際處置仍應以主治醫師之整體臨床判斷為準。
+  </footer>
+
+</div>
+</body>
+</html>
